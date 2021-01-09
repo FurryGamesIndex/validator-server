@@ -40,7 +40,7 @@ def _validate():
     try:
         body = request.form
         schema_name = body["schema"]
-        schema = schema + ".schema.yaml"
+        schema = schema_name + ".schema.yaml"
         if schema not in schemas:
             return result(True, "No such schema")
 
