@@ -1,0 +1,10 @@
+jsonschema
+requests
+pyyaml
+jinja2
+requests
+Pillow
+beautifulsoup4
+git+https://github.com/FurryGamesIndex/python-markdown2
+flask
+waitress

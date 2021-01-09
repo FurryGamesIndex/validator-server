@@ -1,0 +1,31 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>FGI validator BETA</title>
+	<style></style>
+</head>
+<body>
+	<h1>FGI validator BETA</h1>
+	<a href="https://furrygames.top/">FurryGamesIndex website</a><p>
+	<hr />
+	This is a tool designed for <a href="https://github.com/FurryGamesIndex/games">FurryGamesIndex</a> contributors to verify that the data files they want to create/modify are free of syntax errors and to check the display effects.<p>
+	This validator server is free and open-source software licensed under GPLv3+. <a href="https://github.com/FurryGamesIndex/validator-server">Get source / Deploy your own instance</a><p>
+	<hr />
+	<form action="/validate/game" method="post">
+		Which schema of data do you want to test?<br>
+		<select name="schema">
+			<option>game</option>
+			<option>game-l10n</option>
+			<option>author</option>
+		</select><p>
+
+		<div class="schema-game">
+		Your game data file contents<br>
+		<textarea cols="100" rows="32" name="data-game"></textarea><p>
+		</div>
+
+		<button >Submit</button>
+	</form>
+</body>
+</html>
