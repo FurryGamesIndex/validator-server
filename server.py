@@ -39,7 +39,8 @@ def result(error, data, ctype='text/plain; charset=utf-8'):
 def _validate():
     try:
         body = request.form
-        schema = body["schema"] + ".schema.yaml"
+        schema_name = body["schema"]
+        schema = schema + ".schema.yaml"
         if schema not in schemas:
             return result(True, "No such schema")
 
@@ -53,7 +54,7 @@ def _validate():
         except yaml.YAMLError as e:
             return result(False, str(e))
 
-        if schema == "game":
+        if schema_name == "game":
             game["id"] = "__VALIDATOR_GAME"
             game["tr"] = dict()
             game["mtime"] = 1
