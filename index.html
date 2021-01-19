@@ -3,7 +3,15 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>FGI validator BETA</title>
-	<style></style>
+	<style>
+		.hide {
+			display: none !important;
+		}
+
+		form>* {
+			margin-bottom: 20px;
+		}
+	</style>
 </head>
 <body>
 	<h1>FGI validator BETA</h1>
@@ -13,19 +21,43 @@
 	This validator server is free and open-source software licensed under GPLv3+. <a href="https://github.com/FurryGamesIndex/validator-server">Get source / Deploy your own instance</a><p>
 	<hr />
 	<form action="/validate/game" method="post">
-		Which schema of data do you want to test?<br>
-		<select name="schema">
-			<option>game</option>
-			<option>game-l10n</option>
-			<option>author</option>
-		</select><p>
-
-		<div class="schema-game">
+		<div id="game">
 		Your game data file contents<br>
-		<textarea cols="100" rows="32" name="data"></textarea><p>
+		<textarea cols="100" rows="32" name="data"></textarea>
 		</div>
 
-		<button >Submit</button>
+		<div id="game-lang">
+		Your language (If you choose a language other than en, you need add a game-l10n data file contents)<br>
+		Please note: currently does not affect the UI language of the page rendered by this validator server. But the game entry l10n data will be applied, and you can use this to check the syntax of your game-l10n data. We are aware of this problem and will fix it in the future.<br>
+		<select id="game-lang-select" name="lang">
+			<option>en</option>
+			<option>ja</option>
+			<option>zh-cn</option>
+			<option>zh-tw</option>
+		</select>
+		</div>
+
+		<div id="game-l10n">
+		Your game-l10n data file contents<br>
+		<noscript>Please let it empty if the language is en.</noscript>
+		<textarea cols="100" rows="32" name="data_l10n"></textarea>
+		</div>
+
+		<button>Submit</button>
 	</form>
+
+<script>
+document.querySelector('#game-l10n').classList.add('hide');
+
+document.querySelector('#game-lang-select').addEventListener('change', (event) => {
+  const lang = event.target.value;
+  if (lang === "en") {
+    document.querySelector('#game-l10n').classList.add('hide');
+  } else {
+    document.querySelector('#game-l10n').classList.remove('hide');
+  } 
+});
+</script>
+
 </body>
 </html>
