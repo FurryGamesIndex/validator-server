@@ -87,7 +87,8 @@ def _validate():
             cook_game(game, gen.tagmgr, gen.mfac)
             html = renderer.render_game(game["id"], game)
         except Exception as e: # FIXME: catch system exit and capture output, should be fixed in upstream
-            return result(False, ''.join(traceback.format_tb(e.__traceback__)))
+            return result(False, "No syntax problems, but error occured while rendering:\n\n" + str(e) +
+                    "\n\nTraceback (most recent call last):\n" + ''.join(traceback.format_tb(e.__traceback__)))
 
         return result(False, html, ctype="text/html; charset=utf-8")
     except:
