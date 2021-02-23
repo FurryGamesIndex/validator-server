@@ -14,7 +14,7 @@ from waitress import serve
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "fgi"))
 
 import fgi
-from fgi.base import cook_game
+from fgi.game import Game
 from fgi.i18n import uil10n_load_language
 from fgi.generate import Generator
 from fgi.renderers.game import RendererGame
@@ -53,16 +53,14 @@ def _validate():
         data_l10n = body["data_l10n"]
 
         try:
-            game = yaml.safe_load(data) 
-            validate(game, schema_game)
+            rawgame = yaml.safe_load(data)
+            validate(rawgame, schema_game)
         except ValidationError as e:
             return result(False, "Failed to validate game data:\n\n" + str(e))
         except yaml.YAMLError as e:
             return result(False, "Failed to validate game data:\n\n" + str(e))
 
-        game["id"] = "__VALIDATOR_GAME"
-        game["tr"] = dict()
-        game["mtime"] = 1
+        game = Game(rawgame, "_VALIDATOR_GAME", 1)
 
         if lang not in langs:
             return result(False, f"Unsupported language {lang}")
@@ -70,13 +68,13 @@ def _validate():
         if lang != "en":
             try:
                 game_l10n = yaml.safe_load(data_l10n) 
-                validate(game, schema_game_l10n)
+                validate(game_l10n, schema_game_l10n)
             except ValidationError as e:
                 return result(False, "Failed to validate game-l10n data:\n\n" + str(e))
             except yaml.YAMLError as e:
                 return result(False, "Failed to validate game-l10n data:\n\n" + str(e))
 
-            game["tr"][lang] = game_l10n
+            game.add_l10n_data(lang, game_l10n, 1)
 
         ctx = lctx.copy()
         ctx["lang"] = lang
@@ -84,16 +82,17 @@ def _validate():
         renderer = RendererGame(gen, ctx)
 
         try:
-            cook_game(game, gen.tagmgr, gen.mfac)
-            html = renderer.render_game(game["id"], game)
-        except Exception as e: # FIXME: catch system exit and capture output, should be fixed in upstream
+            game.realize(gen.games, gen.tagmgr, gen.mfac)
+            html = renderer.render_game(game.id, game)
+        except Exception as e:
             return result(False, "No syntax problems, but error occured while rendering:\n\n" + str(e) +
                     "\n\nTraceback (most recent call last):\n" + ''.join(traceback.format_tb(e.__traceback__)))
 
         return result(False, html, ctype="text/html; charset=utf-8")
     except:
         print(traceback.format_exc())
-        return result(True, "invalid argument or our internal error")
+        return result(True, "Invalid argument or our internal error:\n\n" + str(e) +
+                "\n\nTraceback (most recent call last):\n" + ''.join(traceback.format_tb(e.__traceback__)))
 
 @app.route('/', methods=['GET'])
 def _root():
