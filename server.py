@@ -82,7 +82,8 @@ def _validate():
         renderer = RendererGame(gen, ctx)
 
         try:
-            game.realize(gen.games, gen.tagmgr, gen.mfac, gen.ifac)
+            game.realize(gen.tagmgr, gen.mfac, gen.ifac, gen.authors)
+            game.link(gen.games)
             html = renderer.render_game(game.id, game)
         except Exception as e:
             return result(False, "No syntax problems, but error occured while rendering:\n\n" + str(e) +
