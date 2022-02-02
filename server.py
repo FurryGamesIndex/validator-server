@@ -82,7 +82,7 @@ def _validate():
         renderer = RendererGame(gen, ctx)
 
         try:
-            game.realize(gen.tagmgr, gen.mfac, gen.ifac, gen.authors)
+            game.realize(gen.tagmgr, gen.mfac, gen.ifac, gen.authors, None)
             game.link(gen.games)
             html = renderer.render_game(game.id, game)
         except Exception as e:
