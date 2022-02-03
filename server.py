@@ -90,7 +90,7 @@ def _validate():
                     "\n\nTraceback (most recent call last):\n" + ''.join(traceback.format_tb(e.__traceback__)))
 
         return result(False, html, ctype="text/html; charset=utf-8")
-    except:
+    except Exception as e:
         print(traceback.format_exc())
         return result(True, "Invalid argument or our internal error:\n\n" + str(e) +
                 "\n\nTraceback (most recent call last):\n" + ''.join(traceback.format_tb(e.__traceback__)))
